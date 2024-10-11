@@ -1,4 +1,3 @@
-import datetime  
 from client import Client
 
 def load_cookies(filename: str) -> dict:
@@ -21,8 +20,6 @@ orders = client.get_orders()
 
 total = 0
 annual = 0
-
-current_year = datetime.datetime.now().year
 
 yearly_spend = {}
 
