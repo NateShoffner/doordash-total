@@ -1,7 +1,10 @@
 import csv
 import datetime
-from client import Client
+
 from tabulate import tabulate
+
+from client import Client
+
 
 def load_cookies(filename: str) -> dict:
     with open(filename, "r") as f:
@@ -14,6 +17,7 @@ def load_cookies(filename: str) -> dict:
 
         return cookies
 
+
 print("Loading cookies")
 cookies = load_cookies("cookie.txt")
 print("Cookies loaded\n")
@@ -24,7 +28,7 @@ orders = client.get_orders()
 total = 0
 annual = 0
 
-yearly_spend = {} # {year: {month: {day: {total}}}}
+yearly_spend = {}  # {year: {month: {day: {total}}}}
 
 for order in orders:
     if order.cancelledAt:
