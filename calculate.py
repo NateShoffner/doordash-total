@@ -1,5 +1,6 @@
 import datetime
 from client import Client
+from tabulate import tabulate
 
 def load_cookies(filename: str) -> dict:
     with open(filename, "r") as f:
@@ -24,7 +25,6 @@ annual = 0
 
 yearly_spend = {} # {year: {month: {day: {total}}}}
 
-# track spend for each day of the year
 for order in orders:
     if order.cancelledAt:
         continue
@@ -45,14 +45,20 @@ for order in orders:
 print("\nSpending by year:")
 
 for year, months in yearly_spend.items():
+
+    table = [["Month", "Total"]]
+
     print(f"\n{year}:")
     year_total = 0
     for month, days in months.items():
         month_name = datetime.datetime.strptime(month, "%m").strftime("%B")
         monthly_sum = sum(days.values())
         year_total += monthly_sum
-        print(f"  {month_name}: ${monthly_sum / 100}")
 
-    print(f"\n  ----------\n  Total: ${year_total / 100}")
+        table.append([month_name, f"${monthly_sum / 100}"])
+
+    print(tabulate(table, headers="firstrow", tablefmt="grid"))
+
+    print(f"\n----------\nTotal: ${year_total / 100}")
 
 print(f"\nTotal: ${total / 100}")
