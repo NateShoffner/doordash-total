@@ -1,3 +1,4 @@
+import csv
 import datetime
 from client import Client
 from tabulate import tabulate
@@ -31,7 +32,11 @@ for order in orders:
 
     total += order.grandTotal.unitAmount
 
-    order_year, order_month, order_day = order.createdAt.split("-")
+    d = datetime.datetime.strptime(order.createdAt, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    order_year = d.strftime("%Y")
+    order_month = d.strftime("%m")
+    order_day = d.strftime("%d")
 
     if order_year not in yearly_spend:
         yearly_spend[order_year] = {}
@@ -62,3 +67,20 @@ for year, months in yearly_spend.items():
     print(f"\n----------\nTotal: ${year_total / 100}")
 
 print(f"\nTotal: ${total / 100}")
+
+csv_response = input("\nWould you like to save this data to a CSV file? Y/N: ")
+
+if csv_response.lower() == "y":
+    with open("doordash_spending.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Year", "Month", "Day", "Total"])
+
+        for year, months in yearly_spend.items():
+            for month, days in months.items():
+                for day, total in days.items():
+                    month_name = datetime.datetime.strptime(month, "%m").strftime("%B")
+                    writer.writerow([year, month_name, day, total / 100])
+
+    print("Data saved to doordash_spending.csv")
+
+print("\nDone!")
